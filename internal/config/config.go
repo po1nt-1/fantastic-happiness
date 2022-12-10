@@ -2,8 +2,9 @@ package config
 
 import (
 	"flag"
-	"github.com/jinzhu/configor"
 	"log"
+
+	"github.com/jinzhu/configor"
 )
 
 var Config = struct {
