@@ -8,14 +8,14 @@ import (
 )
 
 func Run() {
-	var bot, err = tgbotapi.NewBotAPI(config.Config.Telegram.Token)
+	var bot, err = tgbotapi.NewBotAPI(config.Config.Tg.Token)
 	if err != nil {
 		log.Fatalln(err)
 		return
 	}
 	bot.Debug = true
 
-	log.Printf("Authorized on account %s", bot.Self.UserName)
+	log.Println("Authorized on account", bot.Self.UserName)
 
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
@@ -28,6 +28,9 @@ func Run() {
 		}
 
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+		if len(update.Message.Text) == 0 {
+			continue
+		}
 		msg.ReplyToMessageID = update.Message.MessageID
 
 		if _, err := bot.Send(msg); err != nil {
