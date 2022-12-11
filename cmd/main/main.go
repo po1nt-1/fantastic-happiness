@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+
 	"fantastic-happiness/internal/bot"
 )
 
