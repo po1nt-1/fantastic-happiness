@@ -1,22 +1,24 @@
 package bot
 
 import (
-	"fantastic-happiness/internal/config"
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"log"
+
+	"fantastic-happiness/internal/config"
+
+	tgBotApi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 func Run() {
-	var bot, err = tgbotapi.NewBotAPI(config.Config.Telegram.Token)
+	bot, err := tgBotApi.NewBotAPI(config.Config.Tg.Token)
 	if err != nil {
 		log.Fatalln(err)
 		return
 	}
 	bot.Debug = true
 
-	log.Printf("Authorized on account %s", bot.Self.UserName)
+	log.Println("Authorized on account", bot.Self.UserName)
 
-	u := tgbotapi.NewUpdate(0)
+	u := tgBotApi.NewUpdate(0)
 	u.Timeout = 60
 
 	updates := bot.GetUpdatesChan(u)
@@ -26,9 +28,14 @@ func Run() {
 			continue
 		}
 
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+		msg := tgBotApi.NewMessage(update.Message.Chat.ID, update.Message.Text)
+		if len(update.Message.Text) == 0 {
+			continue
+		}
 		msg.ReplyToMessageID = update.Message.MessageID
 
-		bot.Send(msg)
+		if _, err := bot.Send(msg); err != nil {
+			log.Fatalln(err)
+		}
 	}
 }

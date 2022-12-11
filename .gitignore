@@ -1,2 +1,2 @@
-.idea/*
-./configs/*
+.idea/
+/configs/config.yml

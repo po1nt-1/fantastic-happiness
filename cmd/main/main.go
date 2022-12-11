@@ -1,8 +1,9 @@
 package main
 
 import (
-	bot "fantastic-happiness/internal/bot"
 	"fmt"
+
+	"fantastic-happiness/internal/bot"
 )
 
 func main() {
