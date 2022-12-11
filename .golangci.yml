@@ -1,0 +1,6 @@
+---
+linters:
+  enable:
+    - lll
+    - whitespace
+    - gosec
