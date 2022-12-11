@@ -24,17 +24,27 @@ func Run() {
 	updates := bot.GetUpdatesChan(u)
 
 	for update := range updates {
-		if update.Message == nil {
+		msg := update.Message
+		if msg == nil {
+			continue
+		}
+		if msg.Photo == nil {
 			continue
 		}
 
-		msg := tgBotApi.NewMessage(update.Message.Chat.ID, update.Message.Text)
-		if len(update.Message.Text) == 0 {
-			continue
-		}
-		msg.ReplyToMessageID = update.Message.MessageID
+		fileID := msg.Photo[len(msg.Photo)-1].FileID
 
-		if _, err := bot.Send(msg); err != nil {
+		fileURL, err := bot.GetFileDirectURL(fileID)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		log.Println(fileURL)
+
+		response := tgBotApi.NewMessage(msg.Chat.ID, "picture is received")
+		response.ReplyToMessageID = msg.MessageID
+		response.ParseMode = tgBotApi.ModeMarkdownV2
+
+		if _, err := bot.Send(response); err != nil {
 			log.Fatalln(err)
 		}
 	}
