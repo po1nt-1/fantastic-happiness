@@ -48,7 +48,7 @@ func Run() {
 		response.ReplyToMessageID = msg.MessageID
 		response.ParseMode = tgBotApi.ModeMarkdownV2
 		if _, err := bot.Send(response); err != nil {
-			log.Printf("bot.Send: %v", err)
+			log.Printf("bot.Send: %v", err)			
 		}
 	}
 }
