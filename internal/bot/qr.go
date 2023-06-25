@@ -54,11 +54,21 @@ func zbarRun(input bytes.Buffer) (string, error) {
 	}
 
 	outputString := fmt.Sprint(string(output), err)
-	outputString = strings.Replace(outputString, "QR-Code:", "", 1)
-	outputString = strings.Split(outputString, "\n")[0]
-	outputString = string(outputString)
 
-	return string(outputString), nil
+	outputSlice := strings.Split(outputString, "\n")
+	result := ""
+	for i, line := range outputSlice {
+		if strings.Contains(line, "QR-Code") {
+			line = strings.Replace(line, "QR-Code:", "", 1)
+			line = strings.TrimSpace(line)
+			result += fmt.Sprintf("%v: %v\n", i+1, line)
+		} else if strings.Contains(line, "scanned") {
+			line = strings.TrimSpace(line)
+			log.Printf("zbarReport: %v", line)
+		}
+	}
+
+	return result, nil
 }
 
 func processImage(fileURL string) (string, error) {
