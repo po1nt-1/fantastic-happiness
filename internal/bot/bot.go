@@ -3,7 +3,7 @@ package bot
 import (
 	"log"
 
-	"fantastic-happiness/internal/config"
+	"github.com/po1nt-1/fantastic-happiness/internal/config"
 
 	tgBotApi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -11,18 +11,15 @@ import (
 func Run() {
 	bot, err := tgBotApi.NewBotAPI(config.Config.Tg.Token)
 	if err != nil {
-		log.Fatalln(err)
-		return
+		log.Fatalf("NewBotAPI: %v", err)
 	}
-	bot.Debug = true
-
-	log.Println("Authorized on account", bot.Self.UserName)
+	bot.Debug = config.Config.Tg.Debug
+	log.Printf("Authorized on account: %v", bot.Self.UserName)
 
 	u := tgBotApi.NewUpdate(0)
 	u.Timeout = 60
 
 	updates := bot.GetUpdatesChan(u)
-
 	for update := range updates {
 		msg := update.Message
 		if msg == nil {
@@ -33,19 +30,26 @@ func Run() {
 		}
 
 		fileID := msg.Photo[len(msg.Photo)-1].FileID
-
 		fileURL, err := bot.GetFileDirectURL(fileID)
 		if err != nil {
-			log.Fatalln(err)
+			log.Printf("GetFileDirectURL: %v", err)
 		}
-		log.Println(fileURL)
 
-		response := tgBotApi.NewMessage(msg.Chat.ID, "picture is received")
+		responseText, err := processImage(fileURL)
+		if err != nil {
+			log.Printf("processImage: %v", err)
+		}
+		if responseText == "" {
+			continue
+		}
+
+		responseText = tgBotApi.EscapeText(tgBotApi.ModeMarkdownV2, responseText)
+		response := tgBotApi.NewMessage(msg.Chat.ID, responseText)
 		response.ReplyToMessageID = msg.MessageID
 		response.ParseMode = tgBotApi.ModeMarkdownV2
 
 		if _, err := bot.Send(response); err != nil {
-			log.Fatalln(err)
+			log.Printf("Send: %v", err)
 		}
 	}
 }
