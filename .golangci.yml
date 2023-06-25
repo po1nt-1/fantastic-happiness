@@ -3,4 +3,3 @@ linters:
   enable:
     - lll
     - whitespace
-

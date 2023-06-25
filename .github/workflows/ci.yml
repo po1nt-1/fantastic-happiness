@@ -1,3 +1,4 @@
+---
 name: Go build
 on: # yamllint disable-line rule:truthy
   push:
@@ -17,7 +18,7 @@ jobs:
           go-version: 1.19
       - name: Install dependencies
         run: |
-          go get github.com/go-telegram-bot-api/telegram-bot-api/v5
-          go get github.com/jinzhu/configor
+          go get -u github.com/go-telegram-bot-api/telegram-bot-api/v5
+          go get -u github.com/jinzhu/configor
       - name: Build
         run: go build -ldflags "-s -w" -v cmd/main/main.go
