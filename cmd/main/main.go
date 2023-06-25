@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fantastic-happiness/internal/bot"
+	"github.com/po1nt-1/fantastic-happiness/internal/bot"
 )
 
 func main() {

@@ -1,6 +1,6 @@
-module fantastic-happiness
+module github.com/po1nt-1/fantastic-happiness
 
-go 1.19
+go 1.20
 
 require (
 	github.com/go-telegram-bot-api/telegram-bot-api/v5 v5.5.1
@@ -8,6 +8,6 @@ require (
 )
 
 require (
-	github.com/BurntSushi/toml v0.3.1 // indirect
-	gopkg.in/yaml.v2 v2.2.2 // indirect
+	github.com/BurntSushi/toml v1.3.2 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
